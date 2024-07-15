@@ -2,6 +2,11 @@
 import logo from '@public/img/profile-img.png'
 import { useForm } from 'react-hook-form';
 import { useSubmit } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const swalert = withReactContent(Swal);
 
 const Login = () => {
 
@@ -10,15 +15,30 @@ const Login = () => {
 
     const onSubmit = (data) => {
         console.log(data.region);
+        if(data.username == '' || data.password == ''){
+            swalert.fire({
+                title:"The information is incomplete",
+                text:"Please enter the information completely and accurately",
+                icon:'warning'
+            })
+            return false;
+        }
+        
         if(data.region != 'Iran'){
-            alert("Your location is wrong");
+            // toast("Your location is wrong");
+            swalert.fire({
+                title:"ERROR!",
+                text:"The username or password is incorrect. Please enter the information accurately",
+                icon:'error'
+            })
+            return false;
         }else{
             submitForm(data,{method:'post'});
         }
     }
 
     return (
-        <div dir="ltr">
+        <div>
             <div className="absolute h-full w-full bg-slate-200">
                 <div className="flex mx-auto justify-center md:mt-40 sm:mt-10">
                     <div className="bg-gradient-to-b from-blue-500 to-slate-800 w-3/4 md:w-1/4 p-0 rounded rounded-lg pb-8">
@@ -28,12 +48,10 @@ const Login = () => {
                         <form onSubmit={handleSubmit(onSubmit)} action="#">
                             <div className='flex p-5 pt-0'>
                                 <input {...register('username',{
-                                    required:"نام کاربری اجباری است"
                                 })} className='bg-slate-100 rounded-lg h-10 w-full p-2' type="text" placeholder='UserName' />
                             </div>
                             <div className='flex p-5 pt-0'>
                                 <input {...register('password',{
-                                    required:"رمزعبور اجباری است"
                                 })} className='bg-slate-100 rounded-lg h-10 w-full p-2' type="text" placeholder='UserName' />
                             </div>
                             <div className='p-5 pt-0'>
@@ -72,6 +90,6 @@ const Login = () => {
 export default Login;
 
 export async function loginAction(){
-    alert("welcome to netXpert");
+    toast("Welcome to netXpert");
     return false;
 }
