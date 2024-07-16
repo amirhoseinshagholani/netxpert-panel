@@ -12,6 +12,8 @@ const CustomGaugeChart = ({ usedCredit, totalCredit,simcardNumber,packageName,pa
         percent={percentage}
         colors={['#FF0000', '#159100']}
         arcWidth={0.3}
+        needleColor="orange"  
+        textColor ="white"
       />
       <div className='text-lg text-white flex mx-auto justify-center'>
         {simcardNumber}
