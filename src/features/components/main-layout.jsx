@@ -10,36 +10,37 @@ const MainLayout = () => {
                         <div className="pt-12 pb-12"><img src={logo} className="w-48 mx-auto justify-center" alt="" /></div>
                         <div>
                             <a href="/panel">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-xl font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Profile
                                 </div>
                             </a>
-                            <a href="#">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-xl font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
-                                    Buy Packages
-                                </div>
-                            </a>
-                            <a href="#">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-xl font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                            <a href="panel/reservedPackage">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Reserved packages
                                 </div>
                             </a>
-                            <a href="#">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-xl font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                            <a href="panel/buyPackage">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                                    Buy Packages
+                                </div>
+                            </a>
+
+                            <a href="panel/transactions">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Transactions
                                 </div>
                             </a>
                             <a href="#">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-xl font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Sign out
                                 </div>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div className="col-span-5 bg-slate-300 h-full flex flex-col">
+                <div className="col-span-5 bg-white h-full flex flex-col">
                     <div className="bg-slate-800 h-9 p-1 pl-2 shadow-lg">
-                        <span className="text-white">Hi dear, welcome to Net Expert!</span>
+                        <span className="text-white text-xs">Hi dear, welcome to Net Expert!</span>
                     </div>
                     <div className="flex-grow p-4">
                         <div className="h-full">
@@ -47,7 +48,7 @@ const MainLayout = () => {
                         </div>
                     </div>
                     <div id="footer" className="bg-slate-800 h-9 p-2 ">
-                        <span className="flex mx-auto text-white justify-end font-normal text-sm">Copyright © 2021 NetXpert</span>
+                        <span className="flex mx-auto text-white justify-end font-normal text-xs">Copyright © 2021 NetXpert</span>
                     </div>
                 </div>
             </div>

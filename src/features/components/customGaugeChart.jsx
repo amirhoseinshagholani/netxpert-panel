@@ -18,10 +18,10 @@ const CustomGaugeChart = ({ usedCredit, totalCredit,simcardNumber,packageName,pa
       <div className='text-lg text-white flex mx-auto justify-center'>
         {simcardNumber}
       </div>
-      <div className='text-lg text-white flex mx-auto justify-center'>
+      <div className='text-sm text-white flex mt-4 mx-auto justify-center'>
         {packageName}
       </div>
-      <div className='text-lg text-white flex mx-auto justify-center'>
+      <div className='text-sm text-white flex mx-auto justify-center'>
         {packagePeriod}
       </div>
     </div>
