@@ -14,23 +14,23 @@ const MainLayout = () => {
                                     Profile
                                 </div>
                             </a>
-                            <a href="panel/reservedPackage">
+                            <a href="/panel/reservedPackage">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Reserved packages
                                 </div>
                             </a>
-                            <a href="panel/buyPackage">
+                            <a href="/panel/buyPackage">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Buy Packages
                                 </div>
                             </a>
 
-                            <a href="panel/transactions">
+                            <a href="/panel/transactions">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Transactions
                                 </div>
                             </a>
-                            <a href="#">
+                            <a href="/">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Sign out
                                 </div>
@@ -39,7 +39,7 @@ const MainLayout = () => {
                     </div>
                 </div>
                 <div className="col-span-5 bg-white h-full flex flex-col">
-                    <div className="bg-slate-800 h-9 p-1 pl-2 shadow-lg">
+                    <div className="bg-slate-800 h-9 p-1 pl-2 shadow-lg rounded-b-xl">
                         <span className="text-white text-xs">Hi dear, welcome to Net Expert!</span>
                     </div>
                     <div className="flex-grow p-4">
@@ -47,7 +47,7 @@ const MainLayout = () => {
                             <Outlet/>
                         </div>
                     </div>
-                    <div id="footer" className="bg-slate-800 h-9 p-2 ">
+                    <div id="footer" className="bg-slate-800 h-9 p-2 rounded-t-xl">
                         <span className="flex mx-auto text-white justify-end font-normal text-xs">Copyright © 2021 NetXpert</span>
                     </div>
                 </div>

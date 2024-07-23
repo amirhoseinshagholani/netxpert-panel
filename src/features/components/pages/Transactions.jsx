@@ -83,7 +83,7 @@ const Transactions = () => {
     return (
         <>
             <div className="h-full pb-5 pt-0 pl-0 pr-0 bg-slate-300 shadow-lg rounded rounded-lg">
-                <div className="bg-gradient-to-r from-blue-400 to-slate-600 h-14 p-2 rounded-tr-lg rounded-tl-lg">
+                <div className="bg-gradient-to-l from-blue-400 to-slate-600 h-14 p-2 rounded-tr-lg rounded-tl-lg">
                     <span className="text-white text-xl">Transactions</span>
                 </div>
                 <div className="px-3 py-4">
