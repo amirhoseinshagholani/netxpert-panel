@@ -1,7 +1,23 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import logo from '@public/img/profile-img.png';
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const MainLayout = () => {
+    const sesseionName = Cookies.get('sessionName');
+    const simcardNumber = Cookies.get('simcardNumber');
+
+    const navigate = useNavigate();  
+
+    useEffect(()=>{
+        if(!sesseionName && !simcardNumber){     
+            navigate('/');
+            toast("Your session has expired, please login again");
+            return false;
+        }
+    },[]);
+
     return(
         <>
             <div className="absolute grid grid-cols-6 h-full w-full font-semibold">
@@ -40,7 +56,7 @@ const MainLayout = () => {
                 </div>
                 <div className="col-span-5 bg-white h-full flex flex-col">
                     <div className="bg-slate-800 h-9 p-1 pl-2 shadow-lg rounded-b-xl">
-                        <span className="text-white text-xs">Hi dear, welcome to Net Expert!</span>
+                        <span className="text-white text-xs font-bold">Hi, welcome to NetXpert!</span>
                     </div>
                     <div className="flex-grow p-4">
                         <div className="h-full">
