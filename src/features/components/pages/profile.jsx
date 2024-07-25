@@ -87,7 +87,7 @@ const Profile=()=>{
                                  cornerRadius: 7,
                                  padding: 0.05,
                                  width: 0.25,
-                                 colorArray: ["#5BE12C", "#F5CD19", "#FF0000"] 
+                                 colorArray: ["#FF0000", "#F5CD19", "#5BE12C"] 
                              }}
                              pointer={{
                                  type: "needle",
