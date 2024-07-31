@@ -1,7 +1,52 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Cookies from "js-cookie";
 import Grid from "../../../core/grid";
+import { httpService } from "../../../core/http-service";
+import axios from "axios";
 
 const ReservedPackage = () => {
+    const [services,setServices] = useState();
+    const simcardNumber = Cookies.get('simcardNumber');
+    const [getWayToken,setGetWayToken] = useState();
+    const getServices = async (simcardNumber) => {
+        const response_getAllServicesOfUser = await httpService.get(`/deltaSib/getAllServicesOfUser?Api_User=netxpert&Api_Pass=12345678aA*&username=${simcardNumber}`);
+        // console.log(response_getAllServicesOfUser);
+        setServices(response_getAllServicesOfUser);
+    }
+
+    const getway_token = async () => {
+        const formData = new FormData();
+        formData.append("amount", 15000);
+        formData.append("passPhrase", "0D7566C195C8B5B9");
+        formData.append("acceptorId", "992180008175424");
+    
+        try {
+            const response_getway = await axios.post('https://api.nekatel.com/nekatel/api/getway/payment', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            setGetWayToken(response_getway.data);
+        } catch (err) {
+            console.log(err);
+        }
+    
+        return;
+    };
+    
+    
+
+    useEffect(()=>{
+        getServices(simcardNumber); 
+        getway_token();
+    },[]);
+
+
+    useEffect(()=>{
+        console.log(getWayToken); 
+    },[getWayToken])
+
+
     const data = [
         {
             name: {
@@ -85,6 +130,20 @@ const ReservedPackage = () => {
             <div className="h-full pb-5 pt-0 pl-0 pr-0 bg-slate-300 shadow-lg rounded rounded-lg">
                 <div className="bg-gradient-to-l from-blue-400 to-slate-600 h-14 p-2 rounded-tr-lg rounded-tl-lg">
                     <span className="text-white text-xl">Reserved packages</span>
+                </div>
+                <div>
+                    {/* <form method="post" action="https://ikc.shaparak.ir/iuiv3/IPG/Index/" enctype="multipart/form-data">
+                        <input type="hidden" name="tokenIdentity" value="${response.data.result.token}">
+                        <input type="submit" value="DoPayment">
+                    </form> */}
+                    {
+                        getWayToken && (
+                            <form method="post" action="https://ikc.shaparak.ir/iuiv3/IPG/Index/" enctype="multipart/form-data">
+                                <input type="hidden" name="tokenIdentity" value={getWayToken}/>
+                                <input type="submit" value="DoPayment"></input>
+                            </form>
+                        )
+                    }
                 </div>
                 <div className="px-3 py-4">
                     {

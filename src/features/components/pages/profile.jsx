@@ -34,9 +34,11 @@ const Profile=()=>{
                 return res.username == simcardNumber;
             });
             setUser(currentUser);
+            // console.log(currentUser);
+
 
             const response_getServiceOfUser = await httpService.get(`/deltaSib/getActiveServiceOfUser?Api_User=netxpert&Api_Pass=12345678aA*&username='${currentUser.username}'`);
-            console.log(response_getServiceOfUser.data[0]);
+            // console.log(response_getServiceOfUser.data[0]);
             setActiveService(response_getServiceOfUser.data[0]);
 
             if(response_getServiceOfUser.data[0]){
