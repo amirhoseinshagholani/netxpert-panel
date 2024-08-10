@@ -16,12 +16,12 @@ const ReservedPackage = () => {
 
     const getway_token = async () => {
         const formData = new FormData();
-        formData.append("amount", 15000);
+        formData.append("amount", 17000);
         formData.append("passPhrase", "0D7566C195C8B5B9");
         formData.append("acceptorId", "992180008175424");
     
         try {
-            const response_getway = await axios.post('https://api.nekatel.com/nekatel/api/getway/payment', formData, {
+            const response_getway = await httpService.post('/getway/payment', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
