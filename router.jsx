@@ -5,12 +5,17 @@ import Profile from "./src/features/components/pages/profile";
 import BuyPackage from "./src/features/components/pages/buyPackage";
 import Transactions from "./src/features/components/pages/Transactions";
 import ReservedPackage from "./src/features/components/pages/reservedPackage";
+import Test from "./src/features/components/pages/test";
 
 const router = createBrowserRouter([
     {
         path:'/',
         element:<Login/>,
         action:loginAction
+    },
+    {
+        path:'/test',
+        element:<Test/>
     },
     {
         path:'/panel',
