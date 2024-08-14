@@ -14,7 +14,7 @@ const router = createBrowserRouter([
         action:loginAction
     },
     {
-        path:'/test',
+        path:'/reserveProccess',
         element:<Test/>
     },
     {

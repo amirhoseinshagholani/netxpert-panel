@@ -9,10 +9,12 @@ const Test = () => {
     // setGetWayToken(location.state);
     return (
         <>
-            <form method="post" action="https://ikc.shaparak.ir/iuiv3/IPG/Index/" enctype="multipart/form-data">
-                <input type="hidden" name="tokenIdentity" value={token} />
-                <input type="submit" value="تایید سفارش"></input>
-            </form>
+            <div className="p-3">
+                <form method="post" action="https://ikc.shaparak.ir/iuiv3/IPG/Index/" enctype="multipart/form-data">
+                    <input type="hidden" name="tokenIdentity" value={token} />
+                    <input className="p-2 bg-green-500 rounded-lg" type="submit" value="تایید سفارش"></input>
+                </form>
+            </div>
         </>
     )
 }

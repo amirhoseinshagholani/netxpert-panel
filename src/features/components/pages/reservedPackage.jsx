@@ -51,9 +51,9 @@ const ReservedPackage = () => {
                 }
             });
             console.log(response_getway.data);
-            setGetWayToken(response_getway.data);
-            Cookies.set('token',response_getway.data,{expires:1});
-            navigate('/test');
+            setGetWayToken(response_getway.data.token);
+            Cookies.set('token',response_getway.data.token,{expires:1});
+            navigate('/reserveProccess');
             
             
         } catch (err) { 
