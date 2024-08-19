@@ -11,7 +11,7 @@ const MainLayout = () => {
     const navigate = useNavigate();  
 
     useEffect(()=>{
-        if(!sesseionName && !simcardNumber){     
+        if(!sesseionName || !simcardNumber){     
             navigate('/');
             toast("Your session has expired, please login again");
             return false;
@@ -30,25 +30,27 @@ const MainLayout = () => {
                                     Profile
                                 </div>
                             </a>
-                            <a href="/panel/reservedPackage">
-                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
-                                    Reserved packages
-                                </div>
-                            </a>
                             <a href="/panel/buyPackage">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
                                     Buy Packages
                                 </div>
                             </a>
-
-                            <a href="/panel/transactions">
+                            <a href="/panel/reservedPackage">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
-                                    Transactions
+                                    Reserved packages
                                 </div>
                             </a>
+                            <a href="/panel/transactions">
+                                <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
+                                    History
+                                </div>
+                            </a>
+
+
+
                             <a href="/">
                                 <div className="p-3 pt-4 pb-4 pl-8 text-sm font-semibold text-white hover:bg-gradient-to-r from-transparent to-slate-200">
-                                    Sign out
+                                    Log out
                                 </div>
                             </a>
                         </div>

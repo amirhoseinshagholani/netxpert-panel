@@ -7,6 +7,7 @@ import { httpService } from "../../../core/http-service";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { differenceInDays, parseISO } from 'date-fns';
+import { useNavigate } from "react-router-dom";
 
 const calculatePercentageRemaining = (startDate, endDate, todayDate) => {
     const totalDays = differenceInDays(parseISO(endDate), parseISO(startDate));
@@ -20,6 +21,8 @@ const convertDate = (dateString) => {
 };
 
 const Profile=()=>{
+    
+
     const sessionName = Cookies.get('sessionName');
     const simcardNumber = Cookies.get('simcardNumber');
     const [user,setUser] = useState(null);
@@ -70,7 +73,7 @@ const Profile=()=>{
     };
     return(
         <>
-        <div className="h-full pb-5 pt-0 pl-0 pr-0 bg-slate-300 shadow-lg rounded rounded-lg">
+        <div className="h-full pb-5 pt-0 pl-0 pr-0 bg-slate-200 shadow-lg rounded rounded-lg">
             <div className="bg-gradient-to-l from-blue-400 to-slate-600 h-14 p-2 rounded-tr-lg rounded-tl-lg">
                 <span className="text-white text-xl">Profile</span>
             </div>
