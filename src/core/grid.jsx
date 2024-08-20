@@ -1,5 +1,5 @@
 
-import {MaterialReactTable,useMaterialReactTable,} from 'material-react-table';
+import {MaterialReactTable,useMaterialReactTable} from 'material-react-table';
 
 const Grid = ({columns,data=[]}) => {
 

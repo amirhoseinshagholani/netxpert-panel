@@ -5,15 +5,28 @@ import { httpService } from "../../../core/http-service";
 
 const TransactionsPage = () => {
     const simcardNumber = Cookies.get('simcardNumber');
-    const [services, setServices] = useState();
-
+    const [userServices, setUserServices] = useState();
     const getHistory = async () => {
         if (simcardNumber) {
             const response_getAllServicesOfUser = await httpService.get(`/deltaSib/getAllServicesOfUser?Api_User=netxpert&Api_Pass=12345678aA*&username=${simcardNumber}`);
-            // response_getAllServicesOfUser.data.reverse().find(service=>{
-            //     return service.ServiceStatus != "Active"
-            // });
-            setServices(response_getAllServicesOfUser.data.reverse());
+            const response_getServices = await httpService.get(`/deltaSib/getServices?Api_User=netxpert&Api_Pass=12345678aA*`);
+
+            const serviceMap = new Map();
+            response_getServices.data.forEach(service=>{
+                serviceMap.set(service.Service_Id,service.ServiceName);
+            });
+
+            
+            
+
+            const updatedServicesOfUser = response_getAllServicesOfUser.data.map(service => {
+                return {
+                    ...service,
+                    Service_name: serviceMap.get(service.Service_Id) || 'Unknown' 
+                };
+            });
+            console.log(updatedServicesOfUser.reverse());
+            setUserServices(updatedServicesOfUser); 
         }
     }
 
@@ -22,9 +35,11 @@ const TransactionsPage = () => {
     }, []);
 
 
-    const data = services && services.reverse().map(service => (
+
+    const data = userServices && userServices.map(service => (
         {
-            Service: service.Service_Id,
+            Service_id: service.Service_Id,
+            Service_name: service.Service_name,
             StartDate: service.StartDate,
             EndDate: service.EndDate,
             ServiceStatus: service.ServiceStatus,
@@ -34,8 +49,13 @@ const TransactionsPage = () => {
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'Service',
-                header: 'Service',
+                accessorKey: 'Service_id',
+                header: 'Service Id',
+                size: 200,
+            },
+            {
+                accessorKey: 'Service_name',
+                header: 'Service Name',
                 size: 200,
             },
             {
@@ -44,7 +64,7 @@ const TransactionsPage = () => {
                 size: 150,
             },
             {
-                accessorKey: 'EndDate', //normal accessorKey
+                accessorKey: 'EndDate',
                 header: 'End Date',
                 size: 150,
             },

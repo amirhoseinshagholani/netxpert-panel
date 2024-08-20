@@ -58,7 +58,7 @@ const MainLayout = () => {
                 </div>
                 <div className="col-span-5 bg-white h-full flex flex-col">
                     <div className="bg-slate-800 h-9 p-1 pl-2 shadow-lg rounded-b-xl">
-                        <span className="text-white text-xs font-bold">Hi, welcome to NetXpert!</span>
+                        <span className="text-white text-xs font-bold">Hi, Welcome to NetXpert!</span>
                     </div>
                     <div className="flex-grow p-4">
                         <div className="h-full">
