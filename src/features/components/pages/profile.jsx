@@ -80,7 +80,7 @@ const Profile=()=>{
             <div className="grid lg:grid-cols-8 p-5">
                 {
                     user && (
-                        <div className="col-span-6 lg:col-span-2 w-72 h-96 p-5 bg-gradient-to-b from-blue-400 to-slate-900 rounded rounded-lg mt-3">
+                        <div className="shadow-2xl col-span-6 lg:col-span-2 w-72 h-96 p-5 bg-gradient-to-b from-blue-400 to-slate-900 rounded rounded-lg mt-3">
                         <div className="flex gap-1"><span className="text-[#f7ce16]"><SimCardSVG/></span><span className="text-white">{user.username}</span></div>
                         <GaugeComponent
                              value={creditPercent} 

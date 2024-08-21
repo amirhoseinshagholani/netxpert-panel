@@ -42,38 +42,39 @@ const ReservedPackage = () => {
     useEffect(() => {
         getRezerved();
     }, []);
-    // const getway_token = async () => {
 
-    //     const formData = new FormData();
-    //     formData.append("amount", 17000);
-    //     formData.append("passPhrase", "0D7566C195C8B5B9");
-    //     formData.append("acceptorId", "992180008175424");
+    const getway_token = async () => {
 
-    //     try {
-    //         const response_getway = await httpService.post('/getway/payment', formData, {
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         console.log(response_getway.data);
-    //         setGetWayToken(response_getway.data.token);
-    //         Cookies.set('token',response_getway.data.token,{expires:1});
-    //         navigate('/reserveProccess');
+        const formData = new FormData();
+        formData.append("amount", 17000);
+        formData.append("passPhrase", "0D7566C195C8B5B9");
+        formData.append("acceptorId", "992180008175424");
 
-
-    //     } catch (err) { 
-    //         console.log(err);
-    //     }
-
-    //     return;
-    // };
+        try {
+            const response_getway = await httpService.post('/getway/payment', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(response_getway.data);
+            // setGetWayToken(response_getway.data.token);
+            // Cookies.set('token',response_getway.data.token,{expires:1});
+            // navigate('/reserveProccess');
 
 
+        } catch (err) { 
+            console.log(err);
+        }
+
+        return;
+    };
 
 
-    // useEffect(() => {
-    //     console.log(getWayToken);
-    // }, [getWayToken])
+
+
+    useEffect(() => {
+        getway_token();
+    }, [])
 
 
     const data = userServices && userServices.map(service => (
