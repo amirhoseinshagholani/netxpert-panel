@@ -1,7 +1,7 @@
 import logo from "@public/img/profile-img.png";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useActionData, useNavigate, useNavigation, useSubmit} from "react-router-dom";
+import { useActionData, useNavigate, useNavigation, useSubmit } from "react-router-dom";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -27,11 +27,11 @@ const Login = () => {
     if (data.region != "Iran") {
       swalert.fire({
         title: "ERROR!",
-        text: "The username or password is incorrect. Please enter the information accurately",
+        text: "Please enter the information accurately",
         icon: "error",
       });
       return false;
-    } else {
+    } else {      
       submitForm(data, { method: "post" });
     }
   };
@@ -39,14 +39,16 @@ const Login = () => {
   const navigation = useNavigation();
   const isSubmitting = navigation.state != 'idle';
 
+
   const navigate = useNavigate();
 
   const actionData = useActionData();
-  useEffect(()=>{
-    if(actionData){
+
+  useEffect(() => {
+    if (actionData) {      
       navigate('/panel');
     }
-  },[actionData]);
+  }, [actionData]);
 
   return (
     <>
@@ -63,8 +65,8 @@ const Login = () => {
                     {...register("username", {})}
                     className="bg-slate-100 rounded-lg h-10 w-full p-2"
                     type="text"
-                    placeholder="SIMcard Number"
-                    value="09981912396"
+                    placeholder="Username"
+                    value="0012912591"
                   />
                 </div>
                 <div className="flex p-5 pt-0">
@@ -74,13 +76,14 @@ const Login = () => {
                     type="password"
                     placeholder="Password"
                     value="123456"
-                  /> 
+                  />
                 </div>
                 <div className="p-5 pt-0">
                   <select
                     {...register("region")}
                     className="bg-slate-100 rounded-lg h-10 w-full p-2 text-slate-600"
                   >
+                    <option value="">Choose your country...</option>
                     <option value="Argentina">Argentina</option>
                     <option value="Australia">Australia</option>
                     <option value="Brasil">Brasil</option>
@@ -129,54 +132,64 @@ export async function loginAction({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
 
+
+
   const username = data.username; //cf_1385
   const password = data.password; //cf_1485
 
-  try{
-    const response_sessionName = await httpService.post('/crm/getSessionName',{
-      "username":"birashk@outlook.com"
-    },{
-      headers:{
+  try {
+    const response_getToken = await httpService.post('/v1/api/neka/login', {
+      "username": username,
+      "password": password
+    }, {
+      headers: {
         "Content-Type": "application/json",
       }
     });
-    Cookies.set("sessionName",response_sessionName.data,{expires:1});
 
-    const response_terminal = await httpService.post('/crm/getData',{
-      'sessionName':response_sessionName.data,
-      'query':`select * from vtcmTerminals where cf_1385='${username}' and cf_1485='${password}'`
-    },{
-      headers:{
+    // console.log(response_getToken.data.result.access_token);
+
+    Cookies.set("access_token", response_getToken.data.result.access_token, { expires: 1 });
+    Cookies.set("username", username, { expires: 1 });
+    const response_getTerminals = await httpService.get('/v1/api/neka/terminals', {
+      headers: {
         "Content-Type": "application/json",
+        "Authorization": "Bearer " + response_getToken.data.result.access_token
       }
     });
-    if(response_terminal.data.result[0]){
+    // console.log(response_getTerminals.data.result);
 
-      const response_getUsers = await httpService.get("/deltaSib/getUsers?Api_User=netxpert&Api_Pass=12345678aA*"); 
-      const isUser = response_getUsers.data.find(res=>{
-          return res.username == username;
-      });
-      if(!isUser){
-        swalert.fire({
-          title: "SORRY!",
-          text: "The desired user is not registered yet",
-          icon: "warning",
-        });
-        return false;
-      }
+    if (response_getTerminals.data.result.length > 0) {
+      return true;
+      // const response_getUsers = await httpService.get("/deltaSib/getUsers?Api_User=netxpert&Api_Pass=12345678aA*");
+      // const isUser = response_getUsers.data.find(res => {
+      //   return res.username == username;
+      // });
+      // if (!isUser) {
+      //   swalert.fire({
+      //     title: "SORRY!",
+      //     text: "The desired user is not registered yet",
+      //     icon: "warning",
+      //   });
+      //   return false;
+      // }
 
-      Cookies.set("simcardNumber",response_terminal.data.result[0].cf_1385);
-      return response_terminal.data.result[0];
-    }else{
+      // Cookies.set("simcardNumber", response_terminal.data.result[0].cf_1385);
+      // return response_terminal.data.result[0];
+    } else {
       swalert.fire({
-        title: "ERROR!",
-        text: "The username or password is incorrect. Please enter the information accurately",
-        icon: "error",
+        title: "WARNING!",
+        text: "Your account is being set up",
+        icon: "warning",
       });
       return false;
     }
-  }catch(err){
-    toast("There is a network problem, please try again later");
+  } catch (err) {
+    swalert.fire({
+      title: "ERROR!",
+      text: "The username or password is incorrect. Please enter the information accurately",
+      icon: "error",
+    });
     return false;
   }
 }

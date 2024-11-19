@@ -9,81 +9,97 @@ import { useNavigate } from "react-router-dom";
 
 
 const ReservedPackage = () => {
-
-    const simcardNumber = Cookies.get('simcardNumber');
     const [userServices, setUserServices] = useState();
+    const access_token = Cookies.get('access_token');
+    const [terminals, setTerminals] = useState([]);
+    const [reservedService, setReservedService] = useState([]);
+    const [simcardNumber, setSimcardNumber] = useState(null);
+    const [serviceName,setServiceName] = useState(null);
 
-    const getRezerved = async () => {
-        if (simcardNumber) {
-            const response_getAllServicesOfUser = await httpService.get(`/deltaSib/getAllServicesOfUser?Api_User=netxpert&Api_Pass=12345678aA*&username=${simcardNumber}`);
-            const response_getServices = await httpService.get(`/deltaSib/getServices?Api_User=netxpert&Api_Pass=12345678aA*`);
-
-            const serviceMap = new Map();
-            response_getServices.data.forEach(service => {
-                serviceMap.set(service.Service_Id, service.ServiceName);
-            });
-
-            const updatedServicesOfUser = response_getAllServicesOfUser.data.map(service => {
-                return {
-                    ...service,
-                    Service_name: serviceMap.get(service.Service_Id) || 'Unknown'
-                };
-            });
- 
-            const latestUpdate = updatedServicesOfUser.filter(res=>{
-                return res.ServiceStatus == 'Pending';
-            })
-
-            console.log(latestUpdate);
-
-            setUserServices(latestUpdate);
-        }
-    }
-    useEffect(() => {
-        getRezerved();
-    }, []);
-
-    const getway_token = async () => {
-
-        const formData = new FormData();
-        formData.append("amount", 17000);
-        formData.append("passPhrase", "0D7566C195C8B5B9");
-        formData.append("acceptorId", "992180008175424");
-
+    const getTerminals = async () => {
         try {
-            const response_getway = await httpService.post('/getway/payment', formData, {
+            const response_getTerminals = await httpService.get("/v1/api/neka/terminals", {
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + access_token
                 }
             });
-            console.log(response_getway.data);
-            // setGetWayToken(response_getway.data.token);
-            // Cookies.set('token',response_getway.data.token,{expires:1});
-            // navigate('/reserveProccess');
 
 
-        } catch (err) { 
-            console.log(err);
+            if (response_getTerminals.data.result.length > 0) {
+                setTerminals(response_getTerminals.data.result);
+            }
+        } catch (err) {
+            toast("There is a network problem, please try again later");
+            return false;
         }
-
-        return;
-    };
-
-
-
+    }
 
     useEffect(() => {
-        getway_token();
-    }, [])
+        getTerminals();
+    }, []);
 
+    const getReservedServices = async (simNumber) => {
+        try {
+            const response_getReservedServices = await httpService.get(`/v1/api/neka/purchaseServices/${simNumber}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + access_token
+                }
+            });
 
-    const data = userServices && userServices.map(service => (
-        {
-            Service_id: service.Service_Id,
-            Service_name: service.Service_name,
-            Reservation_date: service.CDT.split(' ')[0],
+            if (response_getReservedServices.data.result.length > 0) {
+                // console.log(response_getReservedServices.data.result);
+                setReservedService(response_getReservedServices.data.result);
+            }
+        } catch (err) {
+            toast("There is a network problem, please try again later");
+            return false;
         }
-    ));
+    }
+
+    useEffect(() => {
+        if (simcardNumber) {
+            getReservedServices(simcardNumber);
+        }
+    }, [simcardNumber])
+
+    const getServiceName = async (serviceId) => {
+        try {
+            const response_getServices = await httpService.get("/v1/api/neka/serviceProducts", {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + access_token
+                }
+            });
+
+            const currentService = await response_getServices.data.result.map((service)=>{
+                if(service.serviceId == serviceId){
+                    return service;
+                }
+            })
+
+            // setServiceName(currentService.serviceName);
+            return urrentService.serviceName;
+        } catch (err) {
+            toast("There is a network problem, please try again later");
+            return false;
+        }
+    }
+    var data;
+    useEffect(()=>{
+        data = reservedService && reservedService.map(service => (
+            {
+                Service_id: service.serviceId,
+                Service_name: getServiceName(service.serviceId),
+                Reservation_date: service.cdt.split(' ')[0],
+            }
+        ));
+        console.log(data);
+        
+    },[reservedService])
+
+
 
     const columns = useMemo(
         () => [
@@ -111,20 +127,25 @@ const ReservedPackage = () => {
                 <div className="bg-gradient-to-l from-blue-400 to-slate-600 h-14 p-2 rounded-tr-lg rounded-tl-lg">
                     <span className="text-white text-xl">Reserved packages</span>
                 </div>
-                <div>
-                    {/* <form onSubmit={handleSubmit(getway_token)}>
-                        <input type="submit" value={"payment"}/>
-                    </form> */}
-                    {/* {
-                        getWayToken && (
-                            <form method="post" action="https://ikc.shaparak.ir/iuiv3/IPG/Index/" enctype="multipart/form-data">
-                                <input type="hidden" name="tokenIdentity" value={getWayToken} />
-                                <input type="submit" value="DoPayment"></input>
-                            </form>
-                        )
-                    } */}
-
+                <div class="w-full max-w-xs p-5">
+                    <label for="terminals" class="block text-sm font-medium text-gray-700 mb-2">
+                        Choose an option
+                    </label>
+                    <select
+                        name="terminals"
+                        id="terminals"
+                        class="block w-full px-3 py-2 bg-white text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onChange={(e) => setSimcardNumber(e.target.value)}
+                    >
+                        <option>Select</option>
+                        {
+                            terminals && terminals.map((terminal) => (
+                                <option value={terminal.terminalSim}>{terminal.terminalSim}</option>
+                            ))
+                        }
+                    </select>
                 </div>
+
                 <div className="px-3 py-4">
                     {
                         <Grid columns={columns} data={data} />

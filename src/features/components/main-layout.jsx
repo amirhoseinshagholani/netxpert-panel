@@ -5,13 +5,12 @@ import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
 const MainLayout = () => {
-    const sesseionName = Cookies.get('sessionName');
-    const simcardNumber = Cookies.get('simcardNumber');
-
+    const access_token = Cookies.get('access_token');
+    
     const navigate = useNavigate();  
 
     useEffect(()=>{
-        if(!sesseionName || !simcardNumber){     
+        if(!access_token){     
             navigate('/');
             toast("Your session has expired, please login again");
             return false;
