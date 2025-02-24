@@ -2,28 +2,32 @@ import { useEffect, useMemo, useState } from "react";
 import Cookies from "js-cookie";
 import Grid from "../../../core/grid";
 import { httpService } from "../../../core/http-service";
-import axios from "axios";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
-
 
 const ReservedPackage = () => {
     const [userServices, setUserServices] = useState();
-    const access_token = Cookies.get('access_token');
+
+    const usernamne = Cookies.get('username');
+    const session_Name = Cookies.get('session_Name');
+    const user_id = Cookies.get('user_id');
+
     const [terminals, setTerminals] = useState([]);
-    const [reservedService, setReservedService] = useState([]);
+    const [allServices, setAllServices] = useState([]);
+    const [reservedServices, setReservedServices] = useState([]);
     const [simcardNumber, setSimcardNumber] = useState(null);
-    const [serviceName,setServiceName] = useState(null);
+    const [serviceName, setServiceName] = useState(null);
 
     const getTerminals = async () => {
         try {
-            const response_getTerminals = await httpService.get("/v1/api/neka/terminals", {
+            const response_getTerminals = await httpService.get('/nekatel/api/crm/getData', {
+                params:{
+                    sessionName: session_Name && session_Name,
+                    query: `SELECT * FROM vtcmTerminals where cf_1409=${user_id}`
+                },
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + access_token
                 }
             });
+
 
 
             if (response_getTerminals.data.result.length > 0) {
@@ -41,16 +45,24 @@ const ReservedPackage = () => {
 
     const getReservedServices = async (simNumber) => {
         try {
-            const response_getReservedServices = await httpService.get(`/v1/api/neka/purchaseServices/${simNumber}`, {
+            const response_getUsersOfDeltasib = await httpService.get('/nekatel/api/deltaSib/getUsers?Api_User=netxpert&Api_Pass=12345678aA*', {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + access_token
                 }
             });
 
-            if (response_getReservedServices.data.result.length > 0) {
-                // console.log(response_getReservedServices.data.result);
-                setReservedService(response_getReservedServices.data.result);
+            const usersOfDeltasib = response_getUsersOfDeltasib.data.filter((user)=>{
+                return user.username == simNumber;
+            })
+
+            const response_getReservedServices = await httpService.get(`/nekatel/api/deltaSib/getAllServicesOfUser?Api_User=netxpert&Api_Pass=12345678aA*&user_id=${usersOfDeltasib[0]['user_id']}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+
+            if (response_getReservedServices.data.length > 0) {
+                setAllServices(response_getReservedServices.data);
             }
         } catch (err) {
             toast("There is a network problem, please try again later");
@@ -66,38 +78,49 @@ const ReservedPackage = () => {
 
     const getServiceName = async (serviceId) => {
         try {
-            const response_getServices = await httpService.get("/v1/api/neka/serviceProducts", {
+            const response_getServices = await httpService.get("/nekatel/api/deltaSib/getServices?Api_User=netxpert&Api_Pass=12345678aA*", {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + access_token
                 }
             });
 
-            const currentService = await response_getServices.data.result.map((service)=>{
-                if(service.serviceId == serviceId){
-                    return service;
-                }
-            })
 
-            // setServiceName(currentService.serviceName);
-            return urrentService.serviceName;
+            const currentService = await response_getServices.data.find((service) =>
+                service.Service_Id == serviceId
+            )
+
+            return currentService ? currentService.ServiceName : null;
         } catch (err) {
             toast("There is a network problem, please try again later");
             return false;
         }
     }
+
     var data;
-    useEffect(()=>{
-        data = reservedService && reservedService.map(service => (
-            {
-                Service_id: service.serviceId,
-                Service_name: getServiceName(service.serviceId),
-                Reservation_date: service.cdt.split(' ')[0],
+    useEffect(() => {
+       
+        const fetchData = async () => {
+            if (allServices) {
+                const pendingServices = allServices.filter(
+                    (service) => service.ServiceStatus === "Pending"
+                );
+
+                
+                data = await Promise.all(
+                    pendingServices.map(async (service) => (
+                        {
+                            Service_id: service.Service_Id,
+                            Status: service.ServiceStatus,
+                            Service_name: await getServiceName(service.Service_Id),
+                            Reservation_date: service.CDT.split(' ')[0],
+                        }
+                    ))
+                );    
+                setReservedServices(data.reverse());
             }
-        ));
-        console.log(data);
-        
-    },[reservedService])
+        }
+        fetchData();
+    }, [allServices])
 
 
 
@@ -105,7 +128,7 @@ const ReservedPackage = () => {
         () => [
             {
                 accessorKey: 'Service_id',
-                header: 'Service Id',
+                header: 'Service number',
                 size: 150,
             },
             {
@@ -129,7 +152,7 @@ const ReservedPackage = () => {
                 </div>
                 <div class="w-full max-w-xs p-5">
                     <label for="terminals" class="block text-sm font-medium text-gray-700 mb-2">
-                        Choose an option
+                        Choose a Terminal
                     </label>
                     <select
                         name="terminals"
@@ -140,7 +163,7 @@ const ReservedPackage = () => {
                         <option>Select</option>
                         {
                             terminals && terminals.map((terminal) => (
-                                <option value={terminal.terminalSim}>{terminal.terminalSim}</option>
+                                <option value={terminal.cf_1385}>{terminal.cf_1385}</option>
                             ))
                         }
                     </select>
@@ -148,7 +171,7 @@ const ReservedPackage = () => {
 
                 <div className="px-3 py-4">
                     {
-                        <Grid columns={columns} data={data} />
+                        <Grid columns={columns} data={reservedServices && reservedServices} />
                     }
                 </div>
             </div>

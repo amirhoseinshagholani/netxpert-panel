@@ -24,7 +24,7 @@ const Grid = ({columns,data=[]}) => {
       sx: {
         direction: 'ltr',
         textAlign: 'left',
-        fontFamily:'vazir'
+        fontFamily:'vazir',
       },
     },
   });

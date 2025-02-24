@@ -18,6 +18,8 @@
     "react-dom": "^18.3.1",
     "react-gauge-chart": "^0.5.1",
     "react-gauge-component": "^1.2.21",
+    "react-google-recaptcha": "^3.1.0",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.52.2",
     "react-native-simple-gauge": "^0.3.1",
     "react-router-dom": "^6.24.1",
